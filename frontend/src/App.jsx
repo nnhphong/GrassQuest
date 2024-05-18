@@ -19,7 +19,11 @@ function App() {
   }
 
   socket.emit("userConnected",{});
-  
+
+    socket.on("wantedPosition", (args) =>{
+    console.log(args);
+  });
+
   return (
     <div className="h-dvh">
       <Navbar setView={changeView}/>
