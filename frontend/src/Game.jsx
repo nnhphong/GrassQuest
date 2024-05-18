@@ -2,7 +2,7 @@ import Monument from "./assets/monument1.jpg"
 
 function Game({setView}) {
   return (
-    <>
+    <div className="bg-[url(./assets/forest.jpg)] h-dvh bg-cover">
         <div className="flex flex-col justify-center items-center pt-4">
             <div className="text-4xl underline">Current Target</div>
             <div className="text-xl pt-2">3 km · NE</div>
@@ -25,7 +25,7 @@ function Game({setView}) {
                 Hint
             </button>
         </div>
-    </>
+    </div>
   )
 }
 
