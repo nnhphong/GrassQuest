@@ -6,6 +6,18 @@ const { connectToDB, getDB } = require('./database')
 const port = process.env.PORT || 3000;
 const cors = require("cors");
 const fs = require('fs');
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'images/')
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname)
+  },
+})
+
+const upload = multer({ storage: storage })
 
 app.use(cors());
 var corsOptions = {
@@ -19,7 +31,6 @@ const io = new Server(server, {
     methods: ["GET", "POST"]
   }
 });
-
 
 // db connection
 let db
@@ -67,6 +78,7 @@ server.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
 
+
 app.get('/', (req, res) => {
   res.render("home");
 })
@@ -75,6 +87,12 @@ app.get('/playGame', (req, res) =>
 {
   res.render('playGame', {userid:"helloworld"});
 });
+
+app.post('/image', upload.single('file'), function (req, res) {
+  res.json({})
+})
+
+  
 
 // Socket stuff
 io.on('connection', (socket) =>{

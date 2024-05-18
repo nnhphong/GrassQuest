@@ -44,18 +44,30 @@ function Game({setView, setPlaying, socket, targetLocation, hintsList, updateHin
                 <img src={Monument} className="pt-4 w-full"/>
             </div>
             <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded w-9/12 h-12 relative">
-                <input
-                    type="file"
-                    name="myImage"
-                    className="text-center opacity-0 absolute top-0 bottom-0 left-0 right-0 m-auto z-50"
-                    accept="image/*"
-                    onChange={(event) => {
-                        console.log(event.target.files[0]);
-                        setPlaying(false);
-                        setView("home");
-                        updateHintsList([]);
-                    }}
-                />
+                <form>
+                    <input
+                        type="file"
+                        name="myImage"
+                        className="text-center opacity-0 absolute top-0 bottom-0 left-0 right-0 m-auto z-50"
+                        accept="image/*"
+                        onChange={async (event) => {
+                            console.log(event.target.files[0]);
+                            setPlaying(false);
+                            setView("home");
+                            updateHintsList([]);
+                            let formData = new FormData()
+                            formData.append('file', event.target.files[0])
+                            const response = await fetch('http://localhost:3000/image', {
+                                method: 'POST',
+                                body: formData,
+                            })
+                            if (response){
+                                console.log(response);
+                            }
+                        }}
+                    />
+                </form>
+                
                 <div className="flex flex-col justify-center itemes-center absolute top-0 bottom-0 left-0 right-0 m-auto text-white h-12 w-9/12s" >
                     <div>Submit Image</div>
                 </div>
