@@ -26,6 +26,8 @@ function Game({setView, setPlaying, socket, targetLocation, hintsList, updateHin
     dataToSend['LatiPosition'] = location.lat;
     dataToSend['LongPosition'] = location.lon;
 
+    navigator.geolocation.watchPosition(updatePositionsNow);
+
     useEffect(() => {
         const interval = setInterval(() => {
             navigator.geolocation.watchPosition(updatePositionsNow);
