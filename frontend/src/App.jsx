@@ -14,6 +14,8 @@ function App() {
   
   var [targetLocation, setTargetLocation] = useState({"lat": 0, "lon": 0});
 
+  var [playing, setPlaying] = useState(false);
+
   function getNewTarget(){
     socket.emit("requestNewQuest");
     socket.on("newQuest", (args)=>{
@@ -35,7 +37,7 @@ function App() {
       <Navbar setView={changeView}/>
       {
         view.current == "home" ? 
-          <Body setView={changeView} getNewTarget={getNewTarget}/>
+          <Body setView={changeView} getNewTarget={getNewTarget} playing={playing} setPlaying={setPlaying}/>
         : view.current == "ingame" ? 
           <Game setView={changeView} socket={socket} targetLocation={targetLocation}/> 
         : view.current == "instructions" ?
