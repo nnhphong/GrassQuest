@@ -18,8 +18,10 @@ function Navbar({ setView }) {
         <div className = "pt-2 w-full">
             {isDropdownOpen && (
                 <div className=" w-full absolute top-17 mt-5 right-0">
-                  <div className="justify-center flex items-center justify-evenly bg-gray-900 shadow-lg ring-1 ring-black ring-opacity-5">
-                    <a href="#" className="inline px-4 my-3 text-lg text-white">Instructions</a>
+                  <div className="flex items-center justify-evenly bg-gray-900 shadow-lg ring-1 ring-black ring-opacity-5">
+                    <a href="#" className="inline px-4 my-3 text-lg text-white" onClick={()=>{
+                        setView("instructions");
+                    }}>Instructions</a>
                     <a href="#" className="inline px-4 my-3 text-lg text-white">Profile</a>
                     <a href="#" className="inline px-4 my-3 text-lg text-white">Settings</a>
                   </div>
