@@ -13,7 +13,7 @@ function App() {
   });
   
   var [targetLocation, setTargetLocation] = useState({"lat": 0, "lon": 0});
-
+  var [hintsList, updateHintsList] = useState([]);
   var [playing, setPlaying] = useState(false);
 
   function getNewTarget(){
@@ -39,7 +39,7 @@ function App() {
         view.current == "home" ? 
           <Body setView={changeView} getNewTarget={getNewTarget} playing={playing} setPlaying={setPlaying}/>
         : view.current == "ingame" ? 
-          <Game setView={changeView} socket={socket} targetLocation={targetLocation}/> 
+          <Game setView={changeView} socket={socket} targetLocation={targetLocation} hintsList={hintsList} updateHintsList={updateHintsList}/> 
         : view.current == "instructions" ?
           <Instructions setView={changeView} prevView={view.previous}/>
         : <div></div>

@@ -1,7 +1,8 @@
 import Monument from "./assets/monument1.jpg"
 import { useState, useEffect } from 'react';
+import Hint from "./Hint"
 
-function Game({setView, socket, targetLocation}) {
+function Game({setView, socket, targetLocation, hintsList, updateHintsList}) {
 
     var [direction, setDirection] = useState("Loading...");
 
@@ -12,6 +13,12 @@ function Game({setView, socket, targetLocation}) {
     dataToSend['desiredLon'] = targetLocation.lon;
     dataToSend['userName'] = "test";
 
+    function addHint(text){
+        updateHintsList([...hintsList, <Hint text={hintsList.length} key={hintsList.length}/>]);
+    }
+
+    console.log(hintsList);
+    
     function updatePositionsNow(position)
     {
             dataToSend['LatiPosition'] = position.coords.latitude;
@@ -44,6 +51,10 @@ function Game({setView, socket, targetLocation}) {
         };
     }, []); // has no dependency - this will be called on-component-mount
 
+    var hintsToDisplay = hintsList;
+    if (hintsList.length > 3){
+        hintsToDisplay = hintsList.slice(Math.max(hintsList.length - 3, 0))
+    }
     return (
         <div className="bg-slate-800 bg-cover flex flex-col items-center justify-center h-[calc(100vh-5rem)] pb-10 lg:h-auto lg:justify-normal lg:pt-10">
             <div className="text-4xl font-bold text-white">Current Target</div>
@@ -65,9 +76,13 @@ function Game({setView, socket, targetLocation}) {
                     <div>Submit Image</div>
                 </div>
             </button>
-            <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded w-9/12 h-12 lg:mb-20">
+            <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded w-9/12 h-12 lg:mb-20" onClick={()=>{
+                addHint("Test");
+            }}>
                 Hint
             </button>
+            {hintsList.length ? <div className="pt-5">{hintsToDisplay}</div> : null}
+
         </div>
     )
 }
