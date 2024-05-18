@@ -153,6 +153,13 @@ io.on('connection', (socket) =>{
     socket.emit("desiredUserData", dData);
   });
 
+  socket.on("requestRankedLeaderboard", (arg) =>
+    {
+      console.log("hi");
+      var tempData = db["User info"].find({}).sort({"points":-1}).limit(10);
+      socket.emit("rankedLeaderboard", tempData);
+    });
+
 });
 
 

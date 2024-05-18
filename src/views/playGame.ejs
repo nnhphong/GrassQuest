@@ -3,9 +3,11 @@
 <script>
     var useridd = "<%- userid %>";
     var socket = io();
+    let on_game = true; // to determine if user is currently on the challenge or not
     socket.emit("userConnected", useridd);
     socket.emit("requestNewQuest", useridd);
 
+    socket.emit("requestRankedLeaderboard", {});
 
     var dataToSend = {};
     dataToSend['LatiPosition'] = 0;
@@ -14,8 +16,8 @@
 
     function updatePositionsNow(position)
     {
-            dataToSend['LatiPosition'] = position.coords.latitude;
-            dataToSend['LongPosition'] = position.coords.longitude;
+        dataToSend['LatiPosition'] = position.coords.latitude;
+        dataToSend['LongPosition'] = position.coords.longitude;
     }
 
     function createAndSendData()
@@ -23,19 +25,19 @@
         console.log("creating and sending data");
 
         // We assume that they have geolocation support
+
         navigator.geolocation.watchPosition(updatePositionsNow);
 
         // Emit the data!
         console.log(dataToSend);
         socket.emit("requestData", dataToSend);
     }
-
+    
     createAndSendData();
 
-    socket.on("wantedPosition", (arg) =>
-    {
-        dataToSend['desiredLat'] = arg['DLat'];
-        dataToSend['desiredLon'] = arg['DLon'];
+    socket.on("rankedLeaderboard", (arg) =>{
+        console.log("rankedLeaderboard");
+        console.log("printed leaderboard");
     });
 
     socket.on("returnedData", (arg) =>
