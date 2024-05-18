@@ -1,7 +1,7 @@
 // eslint-disable-next-line react/prop-types
 function Body({setView}) {
   return (
-    <div className="bg-[url(./assets/test.jpg)] h-dvh pb-20 bg-cover flex flex-col justify-center">
+    <div className="bg-[url(./assets/test.jpg)] h-[calc(100vh-5rem)] pb-20 bg-cover flex flex-col justify-center">
         <h1 className = "px-2 pt-10 pb-3 text-center text-5xl font-bold">Hello User!</h1>
         <h2 className = "px-2 py-3 text-center text-wrap text-3xl">Want to start an adventure?</h2>
         <div className="flex justify-center my-2">
