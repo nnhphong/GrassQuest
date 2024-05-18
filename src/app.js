@@ -2,8 +2,42 @@ const express = require('express')
 const app = require('express')();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
+const { connectToDB, getDB } = require('./database')
 
 const port = process.env.PORT || 3000;
+
+// db connection
+let db
+connectToDB((err) => { 
+  if (err) {
+    console.log(err)
+  }
+  else {
+    db = getDB()
+  }
+})  
+
+// Testing routes
+app.get('/allDestination', (req, res) => {
+  let allDestination = []
+  db.collection("Destination")
+    .find()
+    .forEach(pic => allDestination.push(pic))
+    .then(() => {
+      res.status(200).json(allDestination)
+    })
+})
+
+app.get('/addOne', (req, res) => {
+  db.collection("User info")
+    .insertOne({username: "UserX"})
+    .then(() => {
+      res.status(200).send('User added successfully')
+    })
+    .catch((error) => {
+      res.status(500).send('Error added user')
+    })
+})
 
 // Uses jade to render jade files under `/views`
 app.set('views', __dirname + '/views');
@@ -110,3 +144,5 @@ io.on('connection', (socket) =>{
   });
 
 });
+
+
