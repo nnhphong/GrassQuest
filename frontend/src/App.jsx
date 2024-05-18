@@ -1,6 +1,6 @@
 import Navbar from "./Navbar"
 import Game from "./Game"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Body from "./body"
 import Instructions from "./instructions"
 import io from 'socket.io-client'
