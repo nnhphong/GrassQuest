@@ -18,9 +18,13 @@ function Navbar({ setView }) {
         <div className="pt-2 w-full">
           <div className={`absolute top-20 right-0 w-full transition-max-height duration-500 overflow-hidden ${isDropdownOpen ? 'max-h-[500px]' : 'max-h-0'}`}>
             <div className="flex items-center justify-evenly bg-gray-900 shadow-lg ring-1 ring-black ring-opacity-5">
-              <a href="#" className="inline justify-self px-4 py-3 text-sm text-white">Instructions</a>
-              <a href="#" className="inline justify-self px-4 py-3 text-sm text-white">Profile</a>
-              <a href="#" className="inline justify-self px-4 py-3 text-sm text-white">Settings</a>
+              <a href="#" className="inline justify-self px-4 py-6 text-xl text-white" onClick={()=>{
+                setView("instructions");
+              }}>Instructions</a>
+              <a href="#" className="inline justify-self px-4 py-6 text-xl text-white" onClick={()=>{
+                setView("leaderboard");
+              }}>Leaderboard</a>
+              <a href="#" className="inline justify-self px-4 py-6 text-xl text-white">Settings</a>
             </div>
           </div>
         </div>

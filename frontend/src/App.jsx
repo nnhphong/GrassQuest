@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Body from "./body"
 import Instructions from "./instructions"
 import io from 'socket.io-client'
+import Leaderboard from "./Leaderboard"
 const socket = io.connect("http://localhost:3000");
 
 function App() {
@@ -42,7 +43,7 @@ function App() {
           <Game setView={changeView} socket={socket} targetLocation={targetLocation} hintsList={hintsList} updateHintsList={updateHintsList}/> 
         : view.current == "instructions" ?
           <Instructions setView={changeView} prevView={view.previous}/>
-        : <div></div>
+        : view.current == "leaderboard" ? <Leaderboard setView={changeView} prevView={view.previous}/> : <div></div>
         }
     </div>
   )
