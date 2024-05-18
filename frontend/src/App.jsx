@@ -1,22 +1,31 @@
 import Navbar from "./Navbar"
 import Game from "./Game"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Body from "./body"
 import Instructions from "./instructions"
 
 function App() {
-  const [view, setView] = useState("home");
+  const [view, setView] = useState({
+    current: "home",
+    previous: "home"
+  });
 
+  function changeView(target){
+    setView({current: target,
+             previous: view.current
+            }); 
+  }
+  
   return (
     <div className="h-dvh">
-      <Navbar setView={setView}/>
+      <Navbar setView={changeView}/>
       {
-        view == "home" ? 
-          <Body setView={setView}/>
-        : view == "ingame" ? 
-          <Game setView={setView}/> 
-        : view == "instructions" ?
-          <Instructions setView={setView}/>
+        view.current == "home" ? 
+          <Body setView={changeView}/>
+        : view.current == "ingame" ? 
+          <Game setView={changeView}/> 
+        : view.current == "instructions" ?
+          <Instructions setView={changeView} prevView={view.previous}/>
         : <div></div>
         }
     </div>
