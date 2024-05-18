@@ -14,9 +14,6 @@ app.set('view engine', 'ejs');
 // `localhsot:3000/images/flute.png` will be linked to `./public/images/flute.png`
 app.use(express.static(__dirname + '/public'));
 
-
-
-
 server.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
@@ -102,5 +99,14 @@ io.on('connection', (socket) =>{
       newQuestInfo['DLon'] = Math.random()*360-180;
       socket.emit("newQuest", newQuestInfo);
     });
+
+
+  socket.on("getUserData", (arg) =>{
+     // arg is ltierally just an id/name
+
+    var dData = {points:50, name:arg.name, exploredPlaces:["laz", "unionStationToronto", "acceleratorCenter"], photos:["/images/here"] };
+
+    socket.emit("desiredUserData", dData);
+  });
 
 });

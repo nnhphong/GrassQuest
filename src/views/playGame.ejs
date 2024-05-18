@@ -51,9 +51,15 @@
     });
 
 
+    socket.on("desiredUserData", (arg) =>{
+       console.log(arg);
+    });
+
     setInterval(function(){
         createAndSendData()
     }, 10000);
+
+
 
 </script>
 
