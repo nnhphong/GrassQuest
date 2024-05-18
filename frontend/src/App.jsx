@@ -31,7 +31,7 @@ function App() {
         view.current == "home" ? 
           <Body setView={changeView}/>
         : view.current == "ingame" ? 
-          <Game setView={changeView}/> 
+          <Game setView={changeView} socket={socket}/> 
         : view.current == "instructions" ?
           <Instructions setView={changeView} prevView={view.previous}/>
         : <div></div>
