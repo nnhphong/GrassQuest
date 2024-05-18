@@ -1,6 +1,6 @@
 function Hint({ text }) {
   return (
-    <div className="py-2 text-white">
+    <div className="py-2 text-white max-w-9/10 text-center">
         {text}
     </div>
   );

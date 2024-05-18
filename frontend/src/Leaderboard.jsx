@@ -18,9 +18,9 @@ function Leaderboard({setView, prevView, socket}) {
     }
     return (
       <div className="bg-[url(./assets/test.jpg)] h-[calc(100vh-5rem)] pb-20 bg-cover flex flex-col justify-center items-center">
-          <h1 className = "px-4 pt-10 pb-3 text-center text-6xl font-bold">Leaderboard</h1>
+          <h1 className = "px-4 pt-10 pb-3 text-center text-4xl font-bold">Leaderboard</h1>
           {toDisplay}
-          <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold text-xl py-4 px-8 rounded w-1/2" onClick={()=>{
+          <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold text-l py-4 px-8 rounded w-1/2" onClick={()=>{
                 setView(prevView);
             }}>Back</button>
       </div>

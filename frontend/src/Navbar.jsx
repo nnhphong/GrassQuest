@@ -7,7 +7,7 @@ function Navbar({ setView }) {
 
   useEffect(() => {
     function handleMouseDown(event) {
-      if (event.target.id != "menu"){
+      if (event.target.id != "menu" && event.target.localName != "a"){
         setIsDropdownOpen(false);
       }
       console.log(event);
@@ -24,10 +24,6 @@ function Navbar({ setView }) {
 
   return (
     <>
-
-
-
-
 
       <header className="bg-slate-900 py-3 lg:py-4 sticky z-[9999] top-0 px-2 h-20" id="home">
         <div className="container px-4 mx-auto flex items-center justify-center w-full h-full">
