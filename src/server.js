@@ -1,10 +1,20 @@
 const express = require('express')
 const app = require('express')();
 const server = require('http').createServer(app);
-const io = require('socket.io')(server);
+const {Server} = require("socket.io");
 const { connectToDB, getDB } = require('./database')
-
 const port = process.env.PORT || 3000;
+const cors = require("cors");
+
+app.use(cors());
+
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"]
+  }
+});
+
 
 // db connection
 let db
