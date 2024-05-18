@@ -14,27 +14,33 @@ function Game({setView, setPlaying, socket, targetLocation, hintsList, updateHin
     function addHint(text){
         updateHintsList([...hintsList, <Hint text={"Hint " + (hintsList.length+1) + ": " + text} key={hintsList.length}/>]);
     }
-    console.log(hintsList);
-    
+
+    // console.log(hintsList);
+
     function updatePositionsNow(position)
     {
-            setLocation({"lat": position.coords.latitude, "lon": position.coords.longitude});
+        dataToSend['LatiPosition'] = position.coords.latitude;
+        dataToSend['LongPosition'] = position.coords.longitude;
     }
     
-    dataToSend['LatiPosition'] = location.lat;
-    dataToSend['LongPosition'] = location.lon;
+    // dataToSend['LatiPosition'] = location.lat;
+    // dataToSend['LongPosition'] = location.lon;
 
-    navigator.geolocation.watchPosition(updatePositionsNow);
+    // navigator.geolocation.watchPosition(updatePositionsNow);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            navigator.geolocation.watchPosition(updatePositionsNow);
-        }, 10000);
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         navigator.geolocation.watchPosition(updatePositionsNow);
+    //     }, 10000);
       
-        return () => {
-          clearInterval(interval);
-        };
-    }, []); // has no dependency - this will be called on-component-mount
+    //     return () => {
+    //       clearInterval(interval);
+    //     };
+    // }, []); // has no dependency - this will be called on-component-mount
+    async function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
     var hintsToDisplay = hintsList;
     if (hintsList.length > 3){
         hintsToDisplay = hintsList.slice(Math.max(hintsList.length - 3, 0))
@@ -79,12 +85,21 @@ function Game({setView, setPlaying, socket, targetLocation, hintsList, updateHin
                 </div>
             </button>
             <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded w-9/12 h-12" onClick={()=>{
-                navigator.geolocation.watchPosition(updatePositionsNow);
+                // navigator.geolocation.watchPosition(updatePositionsNow);
+                console.log('Clicked');
+                navigator.geolocation.getCurrentPosition((position) => {
+                    dataToSend['LatiPosition'] = position.coords.latitude;
+                    dataToSend['LongPosition'] = position.coords.longitude;
+                    console.log('Here is my position after promise: ', position);
+                })
                 // Emit the data!
-                socket.emit("requestData", dataToSend);
-        
-                socket.on("returnedData", (args) => {
-                    addHint("The target is " + args + " from your current location");
+                sleep(500).then(() => {
+                    console.log('DatatoSend=', dataToSend);
+                    socket.emit("requestData", dataToSend);
+                    
+                    socket.on("returnedData", (args) => {
+                        addHint("The target is " + args + " from your current location");
+                    })
                 })
             }}>
                 Hint
