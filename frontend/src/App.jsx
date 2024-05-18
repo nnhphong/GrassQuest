@@ -1,6 +1,6 @@
 import Navbar from "./Navbar"
 import Game from "./Game"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Body from "./body"
 import Instructions from "./instructions"
 import io from 'socket.io-client'
@@ -43,7 +43,7 @@ function App() {
         view.current == "home" ? 
           <Body setView={changeView} getNewTarget={getNewTarget} playing={playing} setPlaying={setPlaying}/>
         : view.current == "ingame" ? 
-          <Game setView={changeView} socket={socket} targetLocation={targetLocation} hintsList={hintsList} updateHintsList={updateHintsList}/> 
+          <Game setPlaying = {setPlaying} setView={changeView} socket={socket} targetLocation={targetLocation} hintsList={hintsList} updateHintsList={updateHintsList}/> 
         : view.current == "instructions" ?
           <Instructions setView={changeView} prevView={view.previous}/>
         : view.current == "leaderboard" ? <Leaderboard setView={changeView} prevView={view.previous} socket={socket}/> : <div></div>
