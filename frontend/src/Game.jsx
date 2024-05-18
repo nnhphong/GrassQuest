@@ -3,7 +3,7 @@ import Monument from "./assets/monument1.jpg"
 function Game({setView}) {
   return (
     <div className="bg-slate-800 h-dvh bg-cover">
-        <div className="flex flex-col justify-center items-center pt-4">
+        <div className="flex flex-col justify-center items-center pt-12">
             <div className="text-4xl font-bold text-white">Current Target</div>
             <div className="text-xl pt-2 font-bold text-white">3 km · NE</div>
             <img src={Monument} className="pt-4 object-cover w-9/12"/>
