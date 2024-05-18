@@ -5,10 +5,9 @@ import Hint from "./Hint"
 function Game({setView, setPlaying, socket, targetLocation, hintsList, updateHintsList}) {
 
     // var [direction, setDirection] = useState("Loading...");
+    var [location, setLocation] = useState({"lat": 0, "lon": 0});
 
     var dataToSend = {};
-    dataToSend['LatiPosition'] = 0;
-    dataToSend['LongPosition'] = 0;
     dataToSend['desiredLat'] = targetLocation.lat;
     dataToSend['desiredLon'] = targetLocation.lon;
     dataToSend['userName'] = "test";
@@ -21,20 +20,21 @@ function Game({setView, setPlaying, socket, targetLocation, hintsList, updateHin
     
     function updatePositionsNow(position)
     {
-            dataToSend['LatiPosition'] = position.coords.latitude;
-            dataToSend['LongPosition'] = position.coords.longitude;
+            setLocation({"lat": position.coords.latitude, "lon": position.coords.longitude});
     }
     
-    // useEffect(() => {
-    //     createAndSendData();
-    //     const interval = setInterval(() => {
-    //         createAndSendData();
-    //     }, 10000);
+    dataToSend['LatiPosition'] = location.lat;
+    dataToSend['LongPosition'] = location.lon;
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            navigator.geolocation.watchPosition(updatePositionsNow);
+        }, 10000);
       
-    //     return () => {
-    //       clearInterval(interval);
-    //     };
-    // }, []); // has no dependency - this will be called on-component-mount
+        return () => {
+          clearInterval(interval);
+        };
+    }, []); // has no dependency - this will be called on-component-mount
 
     var hintsToDisplay = hintsList;
     if (hintsList.length > 3){

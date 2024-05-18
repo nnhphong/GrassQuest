@@ -6,7 +6,6 @@ const { connectToDB, getDB } = require('./database');
 const { log } = require('console');
 
 const port = process.env.PORT || 3000;
-const cors = require("cors");
 
 // db connection
 let db
@@ -161,13 +160,5 @@ io.on('connection', (socket) =>{
     socket.emit("desiredUserData", dData);
   });
 
-  socket.on("requestRankedLeaderboard", (arg) =>
-    {
-      console.log("hi");
-      var tempData = db.collection("User info").find({}).sort({"points":-1}).limit(10);
-      socket.emit("rankedLeaderboard", tempData);
-    });
-
 });
-
 
