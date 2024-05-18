@@ -31,5 +31,8 @@ io.on('connection', (socket) =>{
 
 app.get('/playGame', (req, res) =>
 {
-  res.render('playGame')
+  res.render('playGame', {userid:"helloworld"});
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
 });
