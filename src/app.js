@@ -36,11 +36,20 @@ io.on('connection', (socket) =>{
   socket.on("userConnected", (arg) =>
     {
       console.log("Client Connected" + arg);
+
+      // Send them the position they need to navigate to
+      var desiredPosition = {DLat : 50.0, DLon : 50.0};
+      socket.emit("wantedPosition", desiredPosition ); // TODO: Make the function for this on client
     });
 
   // When a socket requests an update, an upadate will be provided
   socket.on("requestData", (arg) =>
     {
       console.log(arg);
+
+      var diffLat = arg['LatiPosition'] - arg['desiredLat'];
+      var diffLon = arg['LongPosition'] - arg['desiredLon'];
+      socket.emit("returnedData", returnedData);
     });
+
 });

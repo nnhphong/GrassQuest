@@ -5,6 +5,8 @@
     var socket = io();
     socket.emit("userConnected", useridd);
 
+
+
     var dataToSend = {};
     dataToSend['LatiPosition'] = 0;
     dataToSend['LongPosition'] = 0;
@@ -29,6 +31,18 @@
     }
 
     createAndSendData();
+
+    socket.on("wantedPosition", (arg) =>
+    {
+        dataToSend['desiredLat'] = arg['DLat'];
+        dataToSend['desiredLon'] = arg['DLon'];
+    });
+
+    socket.on("returneddata", (arg) =>
+    {
+        // Process the returned Data
+    });
+
 
     setInterval(function(){
         createAndSendData()
