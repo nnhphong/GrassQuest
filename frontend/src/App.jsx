@@ -46,7 +46,7 @@ function App() {
           <Game setView={changeView} socket={socket} targetLocation={targetLocation} hintsList={hintsList} updateHintsList={updateHintsList}/> 
         : view.current == "instructions" ?
           <Instructions setView={changeView} prevView={view.previous}/>
-        : view.current == "leaderboard" ? <Leaderboard setView={changeView} prevView={view.previous}/> : <div></div>
+        : view.current == "leaderboard" ? <Leaderboard setView={changeView} prevView={view.previous} socket={socket}/> : <div></div>
         }
     </div>
   )
