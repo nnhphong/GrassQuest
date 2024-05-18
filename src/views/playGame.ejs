@@ -1,5 +1,55 @@
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
 
 <script>
-  var socket = io();
+    var useridd = "<%- userid %>";
+    var socket = io();
+    socket.emit("userConnected", useridd);
+
+
+
+    var dataToSend = {};
+    dataToSend['LatiPosition'] = 0;
+    dataToSend['LongPosition'] = 0;
+    dataToSend['userName'] = useridd;
+
+    function updatePositionsNow(position)
+    {
+            dataToSend['LatiPosition'] = position.coords.latitude;
+            dataToSend['LongPosition'] = position.coords.longitude;
+    }
+
+    function createAndSendData()
+    {
+        console.log("creating and sending data");
+
+        // We assume that they have geolocation support
+        navigator.geolocation.watchPosition(updatePositionsNow);
+
+        // Emit the data!
+        console.log(dataToSend);
+        socket.emit("requestData", dataToSend);
+    }
+
+    createAndSendData();
+
+    socket.on("wantedPosition", (arg) =>
+    {
+        dataToSend['desiredLat'] = arg['DLat'];
+        dataToSend['desiredLon'] = arg['DLon'];
+    });
+
+    socket.on("returneddata", (arg) =>
+    {
+        // Process the returned Data
+    });
+
+
+    setInterval(function(){
+        createAndSendData()
+    }, 10000);
+
 </script>
+
+<body>
+    <h3> <%= userid %> </h3>
+</body>
