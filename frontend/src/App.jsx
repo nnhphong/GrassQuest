@@ -4,22 +4,18 @@ import { useState } from 'react';
 import Body from "./body"
 
 function App() {
-  const [view, setView] = useState("ingame");
+  const [view, setView] = useState("home");
 
   return (
     <>
       <Navbar setView={setView}/>
       {
         view == "home" ? 
-          <div className="text-3xl font-bold underline">Hello, World!</div> 
+          <Body setView={setView}/>
         : view == "ingame" ? 
           <Game setView={setView}/>
-
         : <div></div>
         }
-      <Navbar />
-      <Body />
-      <div class="text-3xl font-bold underline">Hello, World!</div>
     </>
   )
 }
