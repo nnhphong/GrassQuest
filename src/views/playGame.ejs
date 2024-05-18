@@ -3,9 +3,38 @@
 <script>
     var useridd = "<%- userid %>";
     var socket = io();
+    socket.emit("userConnected", useridd);
 
+    var dataToSend = {};
+    dataToSend['LatiPosition'] = 0;
+    dataToSend['LongPosition'] = 0;
+    dataToSend['userName'] = useridd;
 
-    </script>
+    function updatePositionsNow(position)
+    {
+            dataToSend['LatiPosition'] = position.coords.latitude;
+            dataToSend['LongPosition'] = position.coords.longitude;
+    }
+
+    function createAndSendData()
+    {
+        console.log("creating and sending data");
+
+        // We assume that they have geolocation support
+        navigator.geolocation.watchPosition(updatePositionsNow);
+
+        // Emit the data!
+        console.log(dataToSend);
+        socket.emit("requestData", dataToSend);
+    }
+
+    createAndSendData();
+
+    setInterval(function(){
+        createAndSendData()
+    }, 10000);
+
+</script>
 
 <body>
     <h3> <%= userid %> </h3>

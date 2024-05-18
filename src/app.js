@@ -25,14 +25,22 @@ app.get('/', (req, res) => {
   res.render("home");
 })
 
-io.on('connection', (socket) =>{
-  console.log("A connection!");
-});
-
 app.get('/playGame', (req, res) =>
 {
   res.render('playGame', {userid:"helloworld"});
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
+});
+
+// Socket stuff
+io.on('connection', (socket) =>{
+  console.log("A connection!");
+  socket.on("userConnected", (arg) =>
+    {
+      console.log("Client Connected" + arg);
+    });
+
+  // When a socket requests an update, an upadate will be provided
+  socket.on("requestData", (arg) =>
+    {
+      console.log(arg);
+    });
 });
