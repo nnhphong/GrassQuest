@@ -24,6 +24,9 @@ export default {
           '"Noto Color Emoji"',
         ],
       },
+      spacing: {
+        '9/10': '90%',
+      }
     },
   },
   plugins: [],

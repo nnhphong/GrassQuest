@@ -8,7 +8,7 @@ function App() {
   const [view, setView] = useState("home");
 
   return (
-    <>
+    <div className="h-dvh">
       <Navbar setView={setView}/>
       {
         view == "home" ? 
@@ -19,7 +19,7 @@ function App() {
           <Instructions setView={setView}/>
         : <div></div>
         }
-    </>
+    </div>
   )
 }
 
