@@ -43,7 +43,7 @@ function App() {
         view.current == "home" ? 
           <Body setView={changeView} getNewTarget={getNewTarget} playing={playing} setPlaying={setPlaying}/>
         : view.current == "ingame" ? 
-          <Game setPlaying = {setPlaying} setView={changeView} socket={socket} targetLocation={targetLocation} hintsList={hintsList} updateHintsList={updateHintsList}/> 
+          <Game setPlaying = {setPlaying} setView={changeView} socket={socket} targetLocation={targetLocation} hintsList={hintsList} updateHintsList={updateHintsList} getNewTarget={getNewTarget}/> 
         : view.current == "instructions" ?
           <Instructions setView={changeView} prevView={view.previous}/>
         : view.current == "leaderboard" ? <Leaderboard setView={changeView} prevView={view.previous} socket={socket}/> : <div></div>
