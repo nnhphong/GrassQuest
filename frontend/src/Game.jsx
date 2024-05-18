@@ -1,10 +1,20 @@
 import Monument from "./assets/monument1.jpg"
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Component } from 'react';
 import Hint from "./Hint"
+import io from 'socket.io-client'
+const socket = io.connect("http://localhost:3000");
 
 function Game({setView, socket, targetLocation, hintsList, updateHintsList}) {
 
     // var [direction, setDirection] = useState("Loading...");
+class App extends Component{
+    fileSelectedHandler = event =>{
+        console.log(event);
+    }
+}
+
+
+    const [file, setFile] = useState();
 
     var dataToSend = {};
     dataToSend['LatiPosition'] = 0;
@@ -18,13 +28,14 @@ function Game({setView, socket, targetLocation, hintsList, updateHintsList}) {
     }
 
     console.log(hintsList);
-    
+
     function updatePositionsNow(position)
     {
             dataToSend['LatiPosition'] = position.coords.latitude;
             dataToSend['LongPosition'] = position.coords.longitude;
     }
-    
+
+
     // useEffect(() => {
     //     createAndSendData();
     //     const interval = setInterval(() => {
@@ -47,20 +58,15 @@ function Game({setView, socket, targetLocation, hintsList, updateHintsList}) {
             <div className="w-9/12 pt-4 flex">
                 <img src={Monument} className="pt-4 w-full"/>
             </div>
-            <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded w-9/12 h-12 relative">
-                <input
-                    type="file"
-                    name="myImage"
-                    className="text-center opacity-0 absolute top-0 bottom-0 left-0 right-0 m-auto z-50"
-                    accept="image/*"
-                    onChange={(event) => {
-                        console.log(event.target.files[0]);
-                    }}
-                />
-                <div className="flex flex-col justify-center itemes-center absolute top-0 bottom-0 left-0 right-0 m-auto text-white" >
-                    <div>Submit Image</div>
-                </div>
-            </button>
+
+
+
+
+                <input type="file" onChange={this.fileSelectedHandler}/>
+
+
+
+
             <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded w-9/12 h-12 lg:mb-20" onClick={()=>{
                 navigator.geolocation.watchPosition(updatePositionsNow);
 

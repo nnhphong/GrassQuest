@@ -5,12 +5,17 @@ const {Server} = require("socket.io");
 const { connectToDB, getDB } = require('./database')
 const port = process.env.PORT || 3000;
 const cors = require("cors");
+const fs = require('fs');
 
 app.use(cors());
+var corsOptions = {
+  origin: '*',
+  optionsSucessStatus:200
+}
 
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5173", "http://localhost:3000"],
+    origin: '*',
     methods: ["GET", "POST"]
   }
 });
@@ -160,6 +165,30 @@ io.on('connection', (socket) =>{
       socket.emit("rankedLeaderboard", tempData);
     });
 
+
+  socket.on('update-avatar',function(json){
+
+    //variables
+    var image = json.data.file;
+    var data = image.replace(/^data:image\/\w+;base64,/, '');
+    var fileName =  'user'+userid+Date.now() + "image.png";
+
+    //upload to folder
+    fs.writeFile("public/" + fileName, data, {encoding: 'base64'}, function(err){
+
+
+      if(err){
+
+        console.log(err);
+
+      }else{
+
+        //success
+        //return image back to js-client
+        io.to(socketid).emit('avatar-updated',{valid:'true',message:'success',buffer: data.toString('base64')
+                                              });
+      }
+    });
+  });
+
 });
-
-
