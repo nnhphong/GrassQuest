@@ -1,30 +1,28 @@
 const express = require('express')
-const app = express()
-const port = 3000
-const http = require('http');
-const server = http.createServer(app);
-const {Server} = require("socket.io");
-const io = new Server(server);
+const app = require('express')();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+
+const port = process.env.PORT || 3000;
 
 // Uses jade to render jade files under `/views`
 app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
+app.set('view engine', 'ejs');
 
 // Client side static assets will be under the  `/public` folder
-app.use(express.static(__dirname + '/public'));
-
 // To use them on the pages, like
 // `localhsot:3000/images/flute.png` will be linked to `./public/images/flute.png`
 app.use(express.static(__dirname + '/public'));
 
 
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
+
+server.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
 })
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+app.get('/', (req, res) => {
+  res.render("home");
 })
 
 io.on('connection', (socket) =>{
@@ -33,5 +31,5 @@ io.on('connection', (socket) =>{
 
 app.get('/playGame', (req, res) =>
 {
-  res.send('Backyard!')
-})
+  res.render('playGame')
+});
