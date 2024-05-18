@@ -38,8 +38,9 @@
         dataToSend['desiredLon'] = arg['DLon'];
     });
 
-    socket.on("returneddata", (arg) =>
+    socket.on("returnedData", (arg) =>
     {
+        console.log(arg);
         // Process the returned Data
     });
 
