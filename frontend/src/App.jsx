@@ -28,6 +28,9 @@ function App() {
     });
   }
   function changeView(target){
+    if (view.current == target){
+      return;
+    }
     setView({current: target,
              previous: view.current
             }); 
