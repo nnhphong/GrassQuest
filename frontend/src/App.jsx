@@ -3,6 +3,8 @@ import Game from "./Game"
 import { useState, useEffect } from 'react';
 import Body from "./body"
 import Instructions from "./instructions"
+import io from 'socket.io-client'
+const socket = io.connect("http://localhost:3000");
 
 function App() {
   const [view, setView] = useState({
@@ -15,7 +17,13 @@ function App() {
              previous: view.current
             }); 
   }
-  
+
+  socket.emit("userConnected",{});
+
+    socket.on("wantedPosition", (args) =>{
+    console.log(args);
+  });
+
   return (
     <div className="h-dvh">
       <Navbar setView={changeView}/>
