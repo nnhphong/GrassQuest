@@ -61,11 +61,11 @@ server.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
 
-app.get('/', (req, res) => {
-  res.render("home");
-})
+// app.get('/', (req, res) => {
+//   res.render("home");
+// })
 
-app.get('/playGame', (req, res) =>
+app.get('/api/playGame', (req, res) =>
 {
   res.render('playGame', {userid:"helloworld"});
 });
