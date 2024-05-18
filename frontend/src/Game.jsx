@@ -1,10 +1,20 @@
 import Monument from "./assets/monument1.jpg"
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Component } from 'react';
 import Hint from "./Hint"
+import io from 'socket.io-client'
+const socket = io.connect("http://localhost:3000");
 
 function Game({setView, setPlaying, socket, targetLocation, hintsList, updateHintsList}) {
 
     // var [direction, setDirection] = useState("Loading...");
+class App extends Component{
+    fileSelectedHandler = event =>{
+        console.log(event);
+    }
+}
+
+
+    const [file, setFile] = useState();
 
     var dataToSend = {};
     dataToSend['LatiPosition'] = 0;
@@ -17,14 +27,15 @@ function Game({setView, setPlaying, socket, targetLocation, hintsList, updateHin
         updateHintsList([...hintsList, <Hint text={"Hint " + (hintsList.length+1) + ": " + text} key={hintsList.length}/>]);
     }
 
-    console.log(hintsList);
-    
+    // console.log(hintsList);
+
     function updatePositionsNow(position)
     {
-            dataToSend['LatiPosition'] = position.coords.latitude;
-            dataToSend['LongPosition'] = position.coords.longitude;
+        dataToSend['LatiPosition'] = position.coords.latitude;
+        dataToSend['LongPosition'] = position.coords.longitude;
     }
-    
+
+
     // useEffect(() => {
     //     createAndSendData();
     //     const interval = setInterval(() => {
@@ -35,6 +46,9 @@ function Game({setView, setPlaying, socket, targetLocation, hintsList, updateHin
     //       clearInterval(interval);
     //     };
     // }, []); // has no dependency - this will be called on-component-mount
+    async function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
     var hintsToDisplay = hintsList;
     if (hintsList.length > 3){
@@ -54,7 +68,7 @@ function Game({setView, setPlaying, socket, targetLocation, hintsList, updateHin
                     className="text-center opacity-0 absolute top-0 bottom-0 left-0 right-0 m-auto z-50"
                     accept="image/*"
                     onChange={(event) => {
-                        console.log(event.target.files[0]);
+                        // console.log(event.target.files[0]);
                         setPlaying(false);
                         setView("home");
                         updateHintsList([]);
@@ -65,15 +79,22 @@ function Game({setView, setPlaying, socket, targetLocation, hintsList, updateHin
                 </div>
             </button>
             <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded w-9/12 h-12" onClick={()=>{
-                navigator.geolocation.watchPosition(updatePositionsNow);
-
-                // Emit the data!
-                socket.emit("requestData", dataToSend);
-        
-                socket.on("returnedData", (args) => {
-                    addHint("The target is " + args + " from your current location");
+                // navigator.geolocation.watchPosition(updatePositionsNow);
+                console.log('Clicked');
+                navigator.geolocation.getCurrentPosition((position) => {
+                    dataToSend['LatiPosition'] = position.coords.latitude;
+                    dataToSend['LongPosition'] = position.coords.longitude;
+                    console.log('Here is my position after promise: ', position);
                 })
-
+                // Emit the data!
+                sleep(5000).then(() => {
+                    console.log('DatatoSend=', dataToSend);
+                    socket.emit("requestData", dataToSend);
+                    
+                    socket.on("returnedData", (args) => {
+                        addHint("The target is " + args + " from your current location");
+                    })
+                })
             }}>
                 Hint
             </button>

@@ -5,12 +5,17 @@ const {Server} = require("socket.io");
 const { connectToDB, getDB } = require('./database')
 const port = process.env.PORT || 3000;
 const cors = require("cors");
+const fs = require('fs');
 
 app.use(cors());
+var corsOptions = {
+  origin: '*',
+  optionsSucessStatus:200
+}
 
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5173", "http://localhost:3000"],
+    origin: '*',
     methods: ["GET", "POST"]
   }
 });
@@ -18,18 +23,23 @@ const io = new Server(server, {
 
 // db connection
 let db
+let allDestination = []
 connectToDB((err) => { 
   if (err) {
     console.log(err)
   }
   else {
     db = getDB()
+    db.collection("Destination")
+    .find()
+    .forEach(pic => allDestination.push(pic))
+    .then(() => {
+    })
   }
 })  
 
 // Testing routes
 app.get('/allDestination', (req, res) => {
-  let allDestination = []
   db.collection("Destination")
     .find()
     .forEach(pic => allDestination.push(pic))
@@ -72,75 +82,83 @@ app.get('/playGame', (req, res) =>
 });
 
 // Socket stuff
+// Socket stuff
 io.on('connection', (socket) =>{
   console.log("A connection!");
   socket.on("userConnected", (arg) =>
     {
-      console.log("Client Connected" + arg);
+      console.log("Client Connected " + arg);
 
       // Send them the position they need to navigate to
-      var desiredPosition = {DLat : 50.0, DLon : 50.0};
-      socket.emit("wantedPosition", desiredPosition ); // TODO: Make the function for this on client
+      // var desiredPosition = {DLat : 50.0, DLon : 50.0};
+      // socket.emit("wantedPosition", desiredPosition ); // TODO: Make the function for this on client
     });
 
   // When a socket requests an update, an upadate will be provided
   socket.on("requestData", (arg) =>
     {
-      console.log(arg);
-
-      var diffLat = arg['LatiPosition'] - arg['desiredLat'];
-      var diffLon = arg['LongPosition'] - arg['desiredLon'];
+      lat1 = arg['LatiPosition'] * (Math.PI / 180)
+      lat2 = arg['desiredLat'] * (Math.PI / 180)
+      lon1 = arg['LongPosition'] * (Math.PI / 180)
+      lon2 = arg['desiredLon'] * (Math.PI / 180)
+      var diffLat = lat2 - lat1;
+      var diffLon = lon2 - lon1;
 
       var returnedData = {};
-      var rad = Math.atan2(diffLon, diffLat);
-      var deg = rad*(180/Math.pi);
-
-      if(337.5 < deg  < 361 || 0 < deg < 22.5)
-      {
-        returnedData = "East";
-      }
-      else if(22.5 < deg < 67.5)
-      {
-        returnedData = "NorthEast";
-      }
-      else if(67.5 < deg < 112.5)
+      // var rad = Math.atan2(diffLon, diffLat);
+      let x = Math.sin(diffLon) * Math.cos(lat2)
+      let y = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(diffLon)
+      var rad = Math.atan2(x, y)
+      var deg = rad*(180/Math.PI);
+      deg = (deg + 360) % 360
+      console.log('Deg = ', deg)
+      if((337.5 < deg && deg < 361) || (0 < deg && deg < 22.5))
       {
         returnedData = "North";
       }
-      else if(112.25 < deg < 157.5)
+      else if(22.5 < deg && deg < 67.5)
       {
-        returnedData = "NorthWest";
+        returnedData = "North-East";
       }
-      else if(157.5 < deg < 202.5)
+      else if(67.5 < deg && deg < 112.5)
       {
-        returnedData = "West";
+        returnedData = "East";
       }
-      else if(202.5 < deg < 247.5)
+      else if(112.25 < deg && deg < 157.5)
       {
-        returnedData = "SouthWest";
+        returnedData = "South-East";
       }
-      else if(247.5 < deg < 292.5)
+      else if(157.5 < deg && deg < 202.5)
       {
         returnedData = "South";
       }
-      else if(292.5 < deg < 337.5)
+      else if(202.5 < deg && deg < 247.5)
       {
-        returnedData = "SouthEast";
+        returnedData = "South-West";
+      }
+      else if(247.5 < deg && deg < 292.5)
+      {
+        returnedData = "West";
+      }
+      else if(292.5 < deg && deg < 337.5)
+      {
+        returnedData = "North-West";
       }
       else
       {
         returnedData = "oh crap";
       }
-
-
+      console.log(returnedData);
       socket.emit("returnedData", returnedData);
     });
 
   socket.on("requestNewQuest", (arg) =>
     {
       var newQuestInfo = {};
-      newQuestInfo['DLat'] = Math.random()*180-90;
-      newQuestInfo['DLon'] = Math.random()*360-180;
+      randomDestination = Math.floor(Math.random() * (allDestination.length - 1));
+      console.log('RandomDestination = ', randomDestination)
+      newQuestInfo['DLat'] = allDestination[randomDestination]['location']['latitude'];
+      newQuestInfo['DLon'] = allDestination[randomDestination]['location']['longitude'];
       socket.emit("newQuest", newQuestInfo);
     });
 
@@ -160,6 +178,30 @@ io.on('connection', (socket) =>{
       socket.emit("rankedLeaderboard", tempData);
     });
 
+
+  socket.on('update-avatar',function(json){
+
+    //variables
+    var image = json.data.file;
+    var data = image.replace(/^data:image\/\w+;base64,/, '');
+    var fileName =  'user'+userid+Date.now() + "image.png";
+
+    //upload to folder
+    fs.writeFile("public/" + fileName, data, {encoding: 'base64'}, function(err){
+
+
+      if(err){
+
+        console.log(err);
+
+      }else{
+
+        //success
+        //return image back to js-client
+        io.to(socketid).emit('avatar-updated',{valid:'true',message:'success',buffer: data.toString('base64')
+                                              });
+      }
+    });
+  });
+
 });
-
-
