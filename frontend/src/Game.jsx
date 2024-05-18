@@ -1,10 +1,15 @@
 import Monument from "./assets/monument1.jpg"
+import { useState, useEffect } from 'react';
 
-function Game({setView, socket}) {
+function Game({setView, socket, targetLocation}) {
+
+    var [direction, setDirection] = useState("Loading...");
 
     var dataToSend = {};
     dataToSend['LatiPosition'] = 0;
     dataToSend['LongPosition'] = 0;
+    dataToSend['desiredLat'] = targetLocation.lat;
+    dataToSend['desiredLon'] = targetLocation.lon;
     dataToSend['userName'] = "test";
 
     function updatePositionsNow(position)
@@ -21,19 +26,28 @@ function Game({setView, socket}) {
         navigator.geolocation.watchPosition(updatePositionsNow);
 
         // Emit the data!
-        console.log(dataToSend);
         socket.emit("requestData", dataToSend);
+
+        socket.on("returnedData", (args) => {
+            setDirection(args);
+        })
     }
 
-    // TODO: Link to an "ingame" state
-    setInterval(function(){
-        createAndSendData()
-    }, 10000);
+    useEffect(() => {
+        createAndSendData();
+        const interval = setInterval(() => {
+            createAndSendData();
+        }, 10000);
+      
+        return () => {
+          clearInterval(interval);
+        };
+    }, []); // has no dependency - this will be called on-component-mount
 
     return (
         <div className="bg-slate-800 bg-cover flex flex-col items-center justify-center h-[calc(100vh-5rem)] pb-10 lg:h-auto lg:justify-normal lg:pt-10">
             <div className="text-4xl font-bold text-white">Current Target</div>
-            <div className="text-xl pt-2 font-bold text-white">3 km · NE</div>
+            <div className="text-xl pt-2 font-bold text-white">{direction}</div>
             <div className="w-9/12 pt-4 flex">
                 <img src={Monument} className="pt-4 w-full"/>
             </div>

@@ -1,6 +1,6 @@
 import Navbar from "./Navbar"
 import Game from "./Game"
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Body from "./body"
 import Instructions from "./instructions"
 import io from 'socket.io-client'
@@ -11,27 +11,33 @@ function App() {
     current: "home",
     previous: "home"
   });
+  
+  var [targetLocation, setTargetLocation] = useState({"lat": 0, "lon": 0});
 
+  function getNewTarget(){
+    socket.emit("requestNewQuest");
+    socket.on("newQuest", (args)=>{
+      setTargetLocation({
+        "lat": args.DLat,
+        "lon": args.DLon,
+      });
+      console.log(args.DLat)
+    });
+  }
   function changeView(target){
     setView({current: target,
              previous: view.current
             }); 
   }
 
-  socket.emit("userConnected",{});
-
-    socket.on("wantedPosition", (args) =>{
-    console.log(args);
-  });
-
   return (
     <div className="h-dvh">
       <Navbar setView={changeView}/>
       {
         view.current == "home" ? 
-          <Body setView={changeView}/>
+          <Body setView={changeView} getNewTarget={getNewTarget}/>
         : view.current == "ingame" ? 
-          <Game setView={changeView} socket={socket}/> 
+          <Game setView={changeView} socket={socket} targetLocation={targetLocation}/> 
         : view.current == "instructions" ?
           <Instructions setView={changeView} prevView={view.previous}/>
         : <div></div>
