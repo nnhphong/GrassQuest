@@ -4,7 +4,7 @@
     var useridd = "<%- userid %>";
     var socket = io();
     socket.emit("userConnected", useridd);
-
+    socket.emit("requestNewQuest", useridd);
 
 
     var dataToSend = {};
@@ -38,9 +38,16 @@
         dataToSend['desiredLon'] = arg['DLon'];
     });
 
-    socket.on("returneddata", (arg) =>
+    socket.on("returnedData", (arg) =>
     {
+        console.log(arg);
         // Process the returned Data
+    });
+
+    socket.on("newQuest", (arg) =>
+    {
+        dataToSend['desiredLat'] = arg['DLat'];
+        dataToSend['desiredLon'] = arg['DLon'];
     });
 
 

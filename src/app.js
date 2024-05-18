@@ -81,7 +81,58 @@ io.on('connection', (socket) =>{
 
       var diffLat = arg['LatiPosition'] - arg['desiredLat'];
       var diffLon = arg['LongPosition'] - arg['desiredLon'];
+
+      var returnedData = {};
+      var rad = Math.atan2(diffLon, diffLat);
+      var deg = rad*(180/Math.pi);
+
+      if(337.5 < deg  < 361 || 0 < deg < 22.5)
+      {
+        returnedData = "East";
+      }
+      else if(22.5 < deg < 67.5)
+      {
+        returnedData = "NorthEast";
+      }
+      else if(67.5 < deg < 112.5)
+      {
+        returnedData = "North";
+      }
+      else if(112.25 < deg < 157.5)
+      {
+        returnedData = "NorthWest";
+      }
+      else if(157.5 < deg < 202.5)
+      {
+        returnedData = "West";
+      }
+      else if(202.5 < deg < 247.5)
+      {
+        returnedData = "SouthWest";
+      }
+      else if(247.5 < deg < 292.5)
+      {
+        returnedData = "South";
+      }
+      else if(292.5 < deg < 337.5)
+      {
+        returnedData = "SouthEast";
+      }
+      else
+      {
+        returnedData = "oh crap";
+      }
+
+
       socket.emit("returnedData", returnedData);
+    });
+
+  socket.on("requestNewQuest", (arg) =>
+    {
+      var newQuestInfo = {};
+      newQuestInfo['DLat'] = Math.random()*180-90;
+      newQuestInfo['DLon'] = Math.random()*360-180;
+      socket.emit("newQuest", newQuestInfo);
     });
 
 });
