@@ -10,7 +10,7 @@ app.use(cors());
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "http://localhost:3000"],
     methods: ["GET", "POST"]
   }
 });
@@ -156,7 +156,7 @@ io.on('connection', (socket) =>{
   socket.on("requestRankedLeaderboard", (arg) =>
     {
       console.log("hi");
-      var tempData = db["User info"].find({}).sort({"points":-1}).limit(10);
+      var tempData = db.collection("User info").find({}).sort({"points":-1}).limit(10);
       socket.emit("rankedLeaderboard", tempData);
     });
 
