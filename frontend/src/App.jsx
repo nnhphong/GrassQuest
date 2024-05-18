@@ -1,6 +1,7 @@
 import Navbar from "./Navbar"
 import Game from "./Game"
 import { useState } from 'react';
+import Body from "./body"
 
 function App() {
   const [view, setView] = useState("ingame");
@@ -16,6 +17,9 @@ function App() {
 
         : <div></div>
         }
+      <Navbar />
+      <Body />
+      <div class="text-3xl font-bold underline">Hello, World!</div>
     </>
   )
 }
