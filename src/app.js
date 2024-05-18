@@ -95,4 +95,12 @@ io.on('connection', (socket) =>{
       socket.emit("returnedData", returnedData);
     });
 
+  socket.on("requestNewQuest", (arg) =>
+    {
+      var newQuestInfo = {};
+      newQuestInfo['DLat'] = Math.random()*180-90;
+      newQuestInfo['DLon'] = Math.random()*360-180;
+      socket.emit("newQuest", newQuestInfo);
+    });
+
 });
