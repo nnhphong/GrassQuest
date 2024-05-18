@@ -2,7 +2,7 @@ import Monument from "./assets/monument1.jpg"
 import { useState, useEffect } from 'react';
 import Hint from "./Hint"
 
-function Game({setView, socket, targetLocation, hintsList, updateHintsList}) {
+function Game({setView, setPlaying, socket, targetLocation, hintsList, updateHintsList}) {
 
     // var [direction, setDirection] = useState("Loading...");
 
@@ -14,7 +14,7 @@ function Game({setView, socket, targetLocation, hintsList, updateHintsList}) {
     dataToSend['userName'] = "test";
 
     function addHint(text){
-        updateHintsList([...hintsList, <Hint text={"Hint " + hintsList.length + ": " + text} key={hintsList.length}/>]);
+        updateHintsList([...hintsList, <Hint text={"Hint " + (hintsList.length+1) + ": " + text} key={hintsList.length}/>]);
     }
 
     console.log(hintsList);
@@ -55,6 +55,9 @@ function Game({setView, socket, targetLocation, hintsList, updateHintsList}) {
                     accept="image/*"
                     onChange={(event) => {
                         console.log(event.target.files[0]);
+                        setPlaying(false);
+                        setView("home");
+                        updateHintsList([]);
                     }}
                 />
                 <div className="flex flex-col justify-center itemes-center absolute top-0 bottom-0 left-0 right-0 m-auto text-white h-12 w-9/12s" >
