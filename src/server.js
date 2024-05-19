@@ -12,29 +12,6 @@ const { MongoClient } = require("mongodb");
 
 const uri = "mongodb+srv://mp2702737:JFMewLsSKRwPieXn@grasstoucher.pbajss0.mongodb.net/?retryWrites=true&w=majority&appName=GrassToucher";
 
-const client = new MongoClient(uri);
-async function run() {
-  try {
-    const database = client.db('Hawkhacks');
-    const movies = database.collection('Destination');
-    console.log(movies);
-    // Query for a movie that has the title 'Back to the Future'
-    const query = { "name": "lazaridis" };
-    const movie = await movies.findOne(query);
-    console.log(movie.location["longitude"] + "hi");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
-  }
-}
-run().catch(console.dir);
-
-
-
-
-
-
-
 
 
 
@@ -70,35 +47,49 @@ const io = new Server(server, {
 // db connection
 let db;
 let allDestination = [], allPics = [], user_name;
-connectToDB((err) => { 
-  if (err) {
-    console.log(err)
-  }
-  else {
-    console.log("hello world");
-    db = getDB("Hawkhacks");
-    db.collection("Destination").find().forEach(des => allDestination.push(des))
-    .then(() => {})
 
-    console.log(allDestination);
+const client = new MongoClient(uri);
+async function run() {
+  const database = client.db('Hawkhacks');
+  const destinations = database.collection('Destination');
+  const pics = database.collection('Pictures');
+  allDestination = await destinations.find().toArray();
+  allPics = await pics.find().toArray()
+}
+run().catch(console.dir);
 
-    db.collection("Pictures").find().forEach(des => allPics.push(des))
-    .then(() => {})
-  }
-})  
+// connectToDB((err) => { 
+//   if (err) {
+//     console.log(err)
+//   }
+//   else {
+//     console.log("hello world");
+//     db = getDB("Hawkhacks");
+//     db.collection("Destination").find().forEach(des => allDestination.push(des))
+//     .then(() => {})
+
+//     console.log(allDestination);
+
+//     db.collection("Pictures").find().forEach(des => allPics.push(des))
+//     .then(() => {})
+//   }
+// })  
 
 function findAchiever(building) {
+  var res = [];
   allPics.forEach((item) => {
-    if (item['Name'] == building)
-      return item['Owner']
+    // console.log(item['name'])
+    if (item['name'] == building)
+      res.push(item['owner']);
   })
+  return res;
 }
 
 function findAchievedDes() {
   visited = []
   allPics.forEach((item) => {
-    if (item['Owner'] == user_name)
-      visited.push(item['Name'])
+    if (item['owner'] == user_name)
+      visited.push(item['name'])
   })
   return visited
 }
@@ -151,8 +142,6 @@ app.get('/playGame', (req, res) =>
 app.post('/image', upload.single('file'), function (req, res) {
   res.json({})
 })
-
-  
 
 // Socket stuff
 // Socket stuff
@@ -215,7 +204,7 @@ io.on('connection', (socket) =>{
       }
       else
       {
-        returnedData = "oh crap";
+        returnedData = "East";
       }
       console.log(returnedData);
       socket.emit("returnedData", returnedData);
@@ -226,22 +215,22 @@ io.on('connection', (socket) =>{
       var newQuestInfo = {};
       let newQuest = [], oldQuest = findAchievedDes()
       allDestination.forEach(des => {
-        if (!(des in oldQuest)) {
+        if (!(des in oldQuest) || oldQuest.length >= newQuest.length) {
           newQuest.push(des)
         }
       })
 
       randomDestination = Math.floor(Math.random() * (newQuest.length - 1));
-      console.log('RandomDestination = ', randomDestination)
       
       newQuestInfo['DLat'] = newQuest[randomDestination]['location']['latitude'];
       newQuestInfo['DLon'] = newQuest[randomDestination]['location']['longitude'];
-      newQuestInfo['Name'] = newQuest[randomDestination]['Name']
+      newQuestInfo['Name'] = newQuest[randomDestination]['name']
       socket.emit("newQuest", newQuestInfo);
     });
 
     socket.on("uploadPicture", (name, owner) => {
-      db.collection("Pictures").insertOne({"name": name, "owner": owner})
+      client.db('Hawkhacks').collection("Pictures").insertOne({"name": name, "owner": owner})
+      run();
     })
 
   socket.on("getUserData", (arg) =>{
@@ -259,6 +248,7 @@ io.on('connection', (socket) =>{
     });
 
   socket.on("getallAchievers", (building_name) => {
+    console.log("AAAA")
     socket.emit("allAchievers", findAchiever(building_name));
   })
 

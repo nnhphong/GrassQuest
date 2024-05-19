@@ -14,7 +14,7 @@ function App() {
     previous: "home"
   });
   
-  var [targetLocation, setTargetLocation] = useState({"lat": 0, "lon": 0});
+  var [targetLocation, setTargetLocation] = useState({"lat": 0, "lon": 0, "name": ""});
   var [hintsList, updateHintsList] = useState([]);
   var [playing, setPlaying] = useState(false);
 
@@ -24,8 +24,8 @@ function App() {
       setTargetLocation({
         "lat": args.DLat,
         "lon": args.DLon,
+        "name": args.Name
       });
-      console.log(args.DLat)
     });
   }
   function changeView(target){
@@ -49,7 +49,7 @@ function App() {
           <Instructions setView={changeView} prevView={view.previous}/>
         : view.current == "leaderboard" ? <Leaderboard setView={changeView} prevView={view.previous} socket={socket}/> : 
         // Target Location should be name
-        view.current == "gallery" ? <Gallery socket={socket} name={targetLocation.lat} /> : <div></div>
+        view.current == "gallery" ? <Gallery socket={socket} name={targetLocation.name} /> : <div></div>
         }
     </div>
   )

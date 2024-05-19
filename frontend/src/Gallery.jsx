@@ -7,14 +7,17 @@ function Gallery({socket, name}) {
     var [picslist, updatePicslist] = useState([]); // get from API
 
     useEffect(() => {
-        // call socket with name of destination
-        updatePicslist([
-            <Picture url="https://static.vecteezy.com/system/resources/thumbnails/025/220/125/small_2x/picture-a-captivating-scene-of-a-tranquil-lake-at-sunset-ai-generative-photo.jpg"/>,
-            <Picture url="https://static.vecteezy.com/system/resources/thumbnails/025/220/125/small_2x/picture-a-captivating-scene-of-a-tranquil-lake-at-sunset-ai-generative-photo.jpg"/>,
-            <Picture url="https://static.vecteezy.com/system/resources/thumbnails/025/220/125/small_2x/picture-a-captivating-scene-of-a-tranquil-lake-at-sunset-ai-generative-photo.jpg"/>,
-            <Picture url="https://static.vecteezy.com/system/resources/thumbnails/025/220/125/small_2x/picture-a-captivating-scene-of-a-tranquil-lake-at-sunset-ai-generative-photo.jpg"/>,
-        ])
+        socket.emit("getallAchievers", name);
+        var newPicsList = [];
+        socket.on("allAchievers", (args) => {
+            args.forEach((pic) => {
+                newPicsList.push(<Picture key={pic} url={"http://localhost:3000/static/" + pic.replaceAll(" ", "").replaceAll(".M", "M")}/>)
+            })
+            updatePicslist(newPicsList)
+        });
     }, []);
+
+    console.log(picslist)
 
     return (
         <>

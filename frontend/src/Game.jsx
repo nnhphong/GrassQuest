@@ -1,4 +1,3 @@
-import Monument from "./assets/monument1.jpg"
 import { useState, useEffect } from 'react';
 import Hint from "./Hint"
 import Modal from "./Modal"
@@ -12,7 +11,7 @@ function Game({setView, setPlaying, socket, targetLocation, hintsList, updateHin
     dataToSend['desiredLon'] = targetLocation.lon;
     dataToSend['userName'] = "test";
     function addHint(text){
-        updateHintsList([...hintsList, <Hint text={"Hint " + (hintsList.length+1) + ": " + text} key={hintsList.length}/>]);
+        updateHintsList([...hintsList, <Hint text={(hintsList.length+1) + ": " + text} key={hintsList.length}/>]);
     }
 
     // console.log(hintsList);
@@ -26,17 +25,17 @@ function Game({setView, setPlaying, socket, targetLocation, hintsList, updateHin
     // dataToSend['LatiPosition'] = location.lat;
     // dataToSend['LongPosition'] = location.lon;
 
-    // navigator.geolocation.watchPosition(updatePositionsNow);
+    navigator.geolocation.watchPosition(updatePositionsNow);
 
-    // useEffect(() => {
-    //     const interval = setInterval(() => {
-    //         navigator.geolocation.watchPosition(updatePositionsNow);
-    //     }, 10000);
+    useEffect(() => {
+        const interval = setInterval(() => {
+            navigator.geolocation.watchPosition(updatePositionsNow);
+        }, 10000);
       
-    //     return () => {
-    //       clearInterval(interval);
-    //     };
-    // }, []); // has no dependency - this will be called on-component-mount
+        return () => {
+          clearInterval(interval);
+        };
+    }, []); // has no dependency - this will be called on-component-mount
     async function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
@@ -50,7 +49,7 @@ function Game({setView, setPlaying, socket, targetLocation, hintsList, updateHin
             <div className="text-4xl font-bold text-white">Current Target</div>
             {/* <div className="text-xl pt-2 font-bold text-white">{direction}</div> */}
             <div className="w-9/12 pt-4 flex">
-                <img src={Monument} className="pt-4 w-full"/>
+                <img src={"http://localhost:3000/static/" + targetLocation.name.replaceAll(" ", "").replaceAll(".", "") + ".jpg"} className="pt-4 w-full max-h-1/2"/>
             </div>
 
             {showModal && <Modal getNewTarget={getNewTarget} setPlaying={setPlaying} toggleModal={toggleModal} setView={setView}/>}
@@ -64,18 +63,22 @@ function Game({setView, setPlaying, socket, targetLocation, hintsList, updateHin
                         accept="image/*"
                         onChange={async (event) => {
                             console.log(event.target.files[0]);
-                            setPlaying(false);
-                            updateHintsList([]);
-                            let formData = new FormData()
-                            toggleModal(true);
-                            formData.append('file', event.target.files[0])
-                            const response = await fetch('http://localhost:3000/image', {
-                                method: 'POST',
-                                body: formData,
-                            })
-                            if (response){
-                                console.log(response);
+                            if (event.target.files[0]){
+                                setPlaying(false);
+                                updateHintsList([]);
+                                let formData = new FormData()
+                                toggleModal(true);
+                                formData.append('file', event.target.files[0])
+                                const response = await fetch('http://localhost:3000/image', {
+                                    method: 'POST',
+                                    body: formData,
+                                })
+                                socket.emit("uploadPicture", targetLocation.name, event.target.files[0].name);
+                                if (response){
+                                    console.log(response);
+                                }
                             }
+                            
                         }}
                     />
                 </form>
