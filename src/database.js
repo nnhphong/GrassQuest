@@ -3,7 +3,8 @@ let dbConnection
 module.exports = {
     // intially connect to the database
     connectToDB: (callback_func) => {
-        MongoClient.connect('mongodb://127.0.0.1:27017/Hawkhack_db').then((client) => {
+        let url = "mongodb+srv://" + process.env.MONGOUSR + ":" + process.env.MONGOPASS + "@" + process.env.MONGOCLUSTER + ".mongodb.net/?retryWrites=true&w=majority";
+        MongoClient.connect("mongodb+srv://mp2702737:JFMewLsSKRwPieXn@grasstoucher.pbajss0.mongodb.net/?retryWrites=true&w=majority&appName=GrassToucher").then((client) => {
             dbConnection = client.db()
             return callback_func()
         }).catch(err => {
