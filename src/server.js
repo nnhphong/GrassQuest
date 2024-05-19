@@ -39,6 +39,32 @@ var documentArray = myCursor.toArray();
 
 
 
+let newQuest = {
+  "Destination" :[
+    {"_id":{"$oid":"664951d168a9b2c44608dca8"},"name":"lazaridis","location":{"longitude":{"$numberDouble":"43.475111"},"latitude":{"$numberDouble":"80.529417"}}},
+    {"_id":{"$oid":"664952c768a9b2c4460a6f2e"},"name":"St. Micheals Roman Church","location":{"longitude":{"$numberDouble":"43.474685"},"latitude":{"$numberDouble":"-80.530373"}}},
+    {"_id":{"$oid":"6649541068a9b2c4460c8ccc"},"name":"Engineering 7","location":{"longitude":{"$numberDouble":"43.47303"},"latitude":{"$numberDouble":"-80.539601"}}},
+    {"_id":{"$oid":"6649555368a9b2c4460e9f10"},"name":"Beth Jacob Cementary","location":{"longitude":{"$numberDouble":"43.439331"},"latitude":{"$numberDouble":"-80.520268"}}},
+    {"_id":{"$oid":"6649561a68a9b2c4460fe4ba"},"name":"Bingermans Big Splash","location":{"longitude":{"$numberDouble":"43.4723"},"latitude":{"$numberDouble":"-80.449998"}}}
+  ],
+
+  "Pictures":[
+    {"_id":{"$oid":"6649640568a9b2c44626e27a"},"name":"Beth Jacob Cementary.jpg","owner":"Yohwllo"},
+    {"_id":{"$oid":"6649644568a9b2c446274ba7"},"name":"Bingermans Big Splash.jpg","owner":"Yohwllo"},
+    {"_id":{"$oid":"6649647068a9b2c446279142"},"name":"Engineering 7.jpg","owner":"Yohwllo"},
+    {"_id":{"$oid":"6649649768a9b2c44627cf5e"},"name":"Lazardis.jpg","owner":"Yohwllo"},
+    {"_id":{"$oid":"664964cd68a9b2c4462827d1"},"name":"St. Micheals Roman Church.jpg","owner":"Yohwllo"}
+  ],
+
+  "User info":[
+    {"_id":{"$oid":"6649578068a9b2c446123324"},"email":"mp270273@gmail.com","name":"Yohwllo","points":{"$numberInt":"150"}},
+    {"_id":{"$oid":"664957d668a9b2c44612c120"},"email":"jacobSmuth@gmail.com","name":"Jacob Smith","points":{"$numberInt":"80"}},
+    {"_id":{"$oid":"6649581268a9b2c4461324d8"},"email":"DominosScam@gmail.com","name":"Dominos Scammed","points":{"$numberInt":"10"}},
+    {"_id":{"$oid":"6649583568a9b2c446135e2d"},"email":"Joe@gmail.com","name":"Joe Mamam","points":{"$numberInt":"78"}},
+    {"_id":{"$oid":"6649585368a9b2c446139029"},"email":"mafia@gmail.com","name":"Ma Fia","points":{"$numberInt":"53"}}
+  ]
+};
+
 
 
 
@@ -245,14 +271,6 @@ io.on('connection', (socket) =>{
     socket.emit("allAchievers", findAchiever(building_name));
   });
 
-
-  socket.on("getAllDestinations", (args) =>{
-
-    console.log("logging finds");
-    
-    
-    socket.emit("allDestinations", allDestinationsData);
-  });
 
 
   
