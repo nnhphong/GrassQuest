@@ -5,6 +5,7 @@ import Body from "./body"
 import Instructions from "./instructions"
 import io from 'socket.io-client'
 import Leaderboard from "./Leaderboard"
+import Gallery from "./Gallery"
 const socket = io.connect("http://localhost:3000");
 
 function App() {
@@ -46,7 +47,9 @@ function App() {
           <Game setPlaying = {setPlaying} setView={changeView} socket={socket} targetLocation={targetLocation} hintsList={hintsList} updateHintsList={updateHintsList} getNewTarget={getNewTarget}/> 
         : view.current == "instructions" ?
           <Instructions setView={changeView} prevView={view.previous}/>
-        : view.current == "leaderboard" ? <Leaderboard setView={changeView} prevView={view.previous} socket={socket}/> : <div></div>
+        : view.current == "leaderboard" ? <Leaderboard setView={changeView} prevView={view.previous} socket={socket}/> : 
+        // Target Location should be name
+        view.current == "gallery" ? <Gallery socket={socket} name={targetLocation.lat} /> : <div></div>
         }
     </div>
   )
