@@ -13,14 +13,15 @@ const { MongoClient } = require("mongodb");
 const uri = "mongodb+srv://mp2702737:JFMewLsSKRwPieXn@grasstoucher.pbajss0.mongodb.net/?retryWrites=true&w=majority&appName=GrassToucher";
 
 const client = new MongoClient(uri);
+const database = client.db('Hawkhacks');
+const DestinationsC = database.collection('Destination');
+const PicturesC = database.collection('Pictures');
+
 async function run() {
   try {
-    const database = client.db('Hawkhacks');
-    const movies = database.collection('Destination');
-    console.log(movies);
     // Query for a movie that has the title 'Back to the Future'
     const query = { "name": "lazaridis" };
-    const movie = await movies.findOne(query);
+    const movie = await DestinationsC.findOne(query);
     console.log(movie.location["longitude"] + "hi");
   } finally {
     // Ensures that the client will close when you finish/error
@@ -29,12 +30,12 @@ async function run() {
 }
 run().catch(console.dir);
 
+// all pictures
+// all places
+// Database code
 
-
-
-
-
-
+var myCursor = DestinationsC.find();
+var documentArray = myCursor.toArray();
 
 
 
@@ -67,25 +68,7 @@ const io = new Server(server, {
   }
 });
 
-// db connection
-let db;
-let allDestination = [], allPics = [], user_name;
-connectToDB((err) => { 
-  if (err) {
-    console.log(err)
-  }
-  else {
-    console.log("hello world");
-    db = getDB("Hawkhacks");
-    db.collection("Destination").find().forEach(des => allDestination.push(des))
-    .then(() => {})
 
-    console.log(allDestination);
-
-    db.collection("Pictures").find().forEach(des => allPics.push(des))
-    .then(() => {})
-  }
-})  
 
 function findAchiever(building) {
   allPics.forEach((item) => {
@@ -234,9 +217,9 @@ io.on('connection', (socket) =>{
       randomDestination = Math.floor(Math.random() * (newQuest.length - 1));
       console.log('RandomDestination = ', randomDestination)
       
-      newQuestInfo['DLat'] = newQuest[randomDestination]['location']['latitude'];
-      newQuestInfo['DLon'] = newQuest[randomDestination]['location']['longitude'];
-      newQuestInfo['Name'] = newQuest[randomDestination]['Name']
+      // newQuestInfo['DLat'] = newQuest[randomDestination]['location']['latitude'];
+      // newQuestInfo['DLon'] = newQuest[randomDestination]['location']['longitude'];
+      // newQuestInfo['Name'] = newQuest[randomDestination]['Name']
       socket.emit("newQuest", newQuestInfo);
     });
 
@@ -260,8 +243,19 @@ io.on('connection', (socket) =>{
 
   socket.on("getallAchievers", (building_name) => {
     socket.emit("allAchievers", findAchiever(building_name));
-  })
+  });
 
+
+  socket.on("getAllDestinations", (args) =>{
+
+    console.log("logging finds");
+    
+    
+    socket.emit("allDestinations", allDestinationsData);
+  });
+
+
+  
 
   socket.on('update-avatar',function(json){
     //variables
