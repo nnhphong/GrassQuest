@@ -176,6 +176,8 @@ io.on('connection', (socket) =>{
       var newQuestInfo = {};
       randomDestination = Math.floor(Math.random() * (allDestination.length - 1));
       console.log('RandomDestination = ', randomDestination)
+      console.log(allDestination)
+      console.log(allDestination)
       newQuestInfo['DLat'] = allDestination[randomDestination]['location']['latitude'];
       newQuestInfo['DLon'] = allDestination[randomDestination]['location']['longitude'];
       socket.emit("newQuest", newQuestInfo);
