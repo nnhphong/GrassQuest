@@ -1,9 +1,12 @@
 import Monument from "./assets/monument1.jpg"
 import { useState, useEffect } from 'react';
 import Hint from "./Hint"
-function Game({setView, setPlaying, socket, targetLocation, hintsList, updateHintsList}) {
+import Modal from "./Modal"
+
+function Game({setView, setPlaying, socket, targetLocation, hintsList, updateHintsList, getNewTarget}) {
     // var [direction, setDirection] = useState("Loading...");
     var [location, setLocation] = useState({"lat": 0, "lon": 0});
+    var [showModal, toggleModal] = useState(false);
     var dataToSend = {};
     dataToSend['desiredLat'] = targetLocation.lat;
     dataToSend['desiredLon'] = targetLocation.lon;
@@ -49,6 +52,9 @@ function Game({setView, setPlaying, socket, targetLocation, hintsList, updateHin
             <div className="w-9/12 pt-4 flex">
                 <img src={Monument} className="pt-4 w-full"/>
             </div>
+
+            {showModal && <Modal getNewTarget={getNewTarget} setPlaying={setPlaying} toggleModal={toggleModal} setView={setView}/>}
+
             <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded w-9/12 h-12 relative">
                 <form>
                     <input
@@ -59,9 +65,9 @@ function Game({setView, setPlaying, socket, targetLocation, hintsList, updateHin
                         onChange={async (event) => {
                             console.log(event.target.files[0]);
                             setPlaying(false);
-                            setView("home");
                             updateHintsList([]);
                             let formData = new FormData()
+                            toggleModal(true);
                             formData.append('file', event.target.files[0])
                             const response = await fetch('http://localhost:3000/image', {
                                 method: 'POST',

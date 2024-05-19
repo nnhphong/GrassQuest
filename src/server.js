@@ -25,6 +25,7 @@ var corsOptions = {
   optionsSucessStatus:200
 }
 
+app.use('/static', express.static('images')); // Can access images on react using the server's URL with /static/(img name)
 const io = new Server(server, {
   cors: {
     origin: '*',

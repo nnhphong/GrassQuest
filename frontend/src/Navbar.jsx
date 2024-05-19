@@ -24,8 +24,7 @@ function Navbar({ setView }) {
 
   return (
     <>
-
-      <header className="bg-slate-900 py-3 lg:py-4 sticky z-[9999] top-0 px-2 h-20" id="home">
+      <header className="bg-slate-900 py-3 lg:py-4 sticky z-[999] top-0 px-2 h-20" id="home">
         <div className="container px-4 mx-auto flex items-center justify-center w-full h-full">
           <img src={Logo} className="py-2 mr-auto h-[3.5rem]" onClick={() => setView("home")}/>
           <div className="text-white flex justify-center h-full">
@@ -42,7 +41,7 @@ function Navbar({ setView }) {
               <a href="#" className="hover:text-blue-200 inline justify-self px-4 py-6 text-xl text-white" onClick={()=>{
                 setView("leaderboard");
               }}>Leaderboard</a>
-              <a href="#" className="hover:text-blue-200 inline justify-self px-4 py-6 text-xl text-white">Settings</a>
+              <a href="#" className="hover:text-blue-200 inline justify-self px-4 py-6 text-xl text-white">Profile</a>
             </div>
           </div>
         </div>
