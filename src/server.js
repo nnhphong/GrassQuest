@@ -34,20 +34,37 @@ const io = new Server(server, {
 
 // db connection
 let db
-let allDestination = []
+let allDestination = [], allPics = [], user_name
 connectToDB((err) => { 
   if (err) {
     console.log(err)
   }
   else {
     db = getDB()
-    db.collection("Destination")
-    .find()
-    .forEach(pic => allDestination.push(pic))
-    .then(() => {
-    })
+    db.collection("Destination").find().forEach(des => allDestination.push(des))
+    .then(() => {})
+
+    db.collection("Pictures").find().forEach(des => allPics.push(des))
+    .then(() => {})
   }
 })  
+
+function findAchiever(building) {
+  allPics.forEach((item) => {
+    if (item['Name'] == building)
+      return item['Owner']
+  })
+}
+
+function findAchievedDes() {
+  visited = []
+  allPics.forEach((item) => {
+    if (item['Owner'] == user_name)
+      visited.push(item['Name'])
+  })
+  return visited
+}
+
 
 // Testing routes
 app.get('/allDestination', (req, res) => {
@@ -106,9 +123,7 @@ io.on('connection', (socket) =>{
   socket.on("userConnected", (arg) =>
     {
       console.log("Client Connected " + arg);
-
-      // Send them the position they need to navigate to
-      // var desiredPosition = {DLat : 50.0, DLon : 50.0};
+      user_name = arg;
       // socket.emit("wantedPosition", desiredPosition ); // TODO: Make the function for this on client
     });
 
@@ -119,11 +134,9 @@ io.on('connection', (socket) =>{
       lat2 = arg['desiredLat'] * (Math.PI / 180)
       lon1 = arg['LongPosition'] * (Math.PI / 180)
       lon2 = arg['desiredLon'] * (Math.PI / 180)
-      var diffLat = lat2 - lat1;
       var diffLon = lon2 - lon1;
 
       var returnedData = {};
-      // var rad = Math.atan2(diffLon, diffLat);
       let x = Math.sin(diffLon) * Math.cos(lat2)
       let y = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(diffLon)
       var rad = Math.atan2(x, y)
@@ -173,13 +186,24 @@ io.on('connection', (socket) =>{
   socket.on("requestNewQuest", (arg) =>
     {
       var newQuestInfo = {};
-      randomDestination = Math.floor(Math.random() * (allDestination.length - 1));
+      let newQuest = [], oldQuest = findAchievedDes()
+      allDestination.forEach(des => {
+        if (!(des in oldQuest)) {
+          newQuest.push(des)
+        }
+      })
+
+      randomDestination = Math.floor(Math.random() * (newQuest.length - 1));
       console.log('RandomDestination = ', randomDestination)
-      newQuestInfo['DLat'] = allDestination[randomDestination]['location']['latitude'];
-      newQuestInfo['DLon'] = allDestination[randomDestination]['location']['longitude'];
+      newQuestInfo['DLat'] = newQuest[randomDestination]['location']['latitude'];
+      newQuestInfo['DLon'] = newQuest[randomDestination]['location']['longitude'];
+      newQuestInfo['Name'] = newQuest[randomDestination]['Name']
       socket.emit("newQuest", newQuestInfo);
     });
 
+    socket.on("uploadPicture", (name, owner) => {
+      db.collection("Pictures").insertOne({"name": name, "owner": owner})
+    })
 
   socket.on("getUserData", (arg) =>{
      // arg is ltierally just an id/name
@@ -191,14 +215,16 @@ io.on('connection', (socket) =>{
 
   socket.on("requestRankedLeaderboard", (arg) =>
     {
-      console.log("hi");
       var tempData = db.collection("User info").find({}).sort({"points":-1}).limit(10);
       socket.emit("rankedLeaderboard", tempData);
     });
 
+  socket.on("getallAchievers", (building_name) => {
+    socket.emit("allAchievers", findAchiever(building_name));
+  })
+
 
   socket.on('update-avatar',function(json){
-
     //variables
     var image = json.data.file;
     var data = image.replace(/^data:image\/\w+;base64,/, '');
