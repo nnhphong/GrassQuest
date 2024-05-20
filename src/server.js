@@ -1,9 +1,12 @@
 const express = require('express')
 const app = require('express')();
 const server = require('http').createServer(app);
-const {Server} = require("socket.io");
-const { connectToDB, getDB } = require('./database')
+const io = require('socket.io')(server);
+const { connectToDB, getDB } = require('./database');
+const { log } = require('console');
+
 const port = process.env.PORT || 3000;
+<<<<<<< HEAD
 const cors = require("cors");
 const fs = require('fs');
 const multer = require('multer');
@@ -94,6 +97,27 @@ function findAchievedDes() {
   return visited
 }
 
+=======
+
+// db connection
+let db
+let allDestination = []
+connectToDB((err) => { 
+  if (err) {
+    console.log(err)
+  }
+  else {
+    db = getDB()
+    db.collection("Destination")
+    .find()
+    .forEach(pic => allDestination.push(pic))
+    .then(() => {
+      // console.log('successfully');
+      // console.log(allDestination);
+    })
+  }
+})  
+>>>>>>> refs/remotes/origin/main
 
 // Testing routes
 app.get('/allDestination', (req, res) => {
@@ -103,6 +127,7 @@ app.get('/allDestination', (req, res) => {
     .then(() => {
       res.status(200).json(allDestination)
     })
+  console.log(allDestination);
 })
 
 app.get('/addOne', (req, res) => {
@@ -129,28 +154,44 @@ server.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
 
+<<<<<<< HEAD
 
 app.get('/', (req, res) => {
   res.render("home");
 })
+=======
+// app.get('/', (req, res) => {
+//   res.render("home");
+// })
+>>>>>>> refs/remotes/origin/main
 
-app.get('/playGame', (req, res) =>
+app.get('/api/playGame', (req, res) =>
 {
   res.render('playGame', {userid:"helloworld"});
 });
 
+<<<<<<< HEAD
 app.post('/image', upload.single('file'), function (req, res) {
   res.json({})
 })
 
 // Socket stuff
+=======
+
+>>>>>>> refs/remotes/origin/main
 // Socket stuff
 io.on('connection', (socket) =>{
   console.log("A connection!");
   socket.on("userConnected", (arg) =>
     {
       console.log("Client Connected " + arg);
+<<<<<<< HEAD
       user_name = arg;
+=======
+
+      // Send them the position they need to navigate to
+      // var desiredPosition = {DLat : 50.0, DLon : 50.0};
+>>>>>>> refs/remotes/origin/main
       // socket.emit("wantedPosition", desiredPosition ); // TODO: Make the function for this on client
     });
 
@@ -161,15 +202,27 @@ io.on('connection', (socket) =>{
       lat2 = arg['desiredLat'] * (Math.PI / 180)
       lon1 = arg['LongPosition'] * (Math.PI / 180)
       lon2 = arg['desiredLon'] * (Math.PI / 180)
+<<<<<<< HEAD
       var diffLon = lon2 - lon1;
 
       var returnedData = {};
+=======
+      var diffLat = lat2 - lat1;
+      var diffLon = lon2 - lon1;
+
+      var returnedData = {};
+      // var rad = Math.atan2(diffLon, diffLat);
+>>>>>>> refs/remotes/origin/main
       let x = Math.sin(diffLon) * Math.cos(lat2)
       let y = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(diffLon)
       var rad = Math.atan2(x, y)
       var deg = rad*(180/Math.PI);
       deg = (deg + 360) % 360
+<<<<<<< HEAD
       console.log('Deg = ', deg)
+=======
+      console.log(deg)
+>>>>>>> refs/remotes/origin/main
       if((337.5 < deg && deg < 361) || (0 < deg && deg < 22.5))
       {
         returnedData = "North";
@@ -206,13 +259,18 @@ io.on('connection', (socket) =>{
       {
         returnedData = "East";
       }
+<<<<<<< HEAD
       console.log(returnedData);
+=======
+
+>>>>>>> refs/remotes/origin/main
       socket.emit("returnedData", returnedData);
     });
 
   socket.on("requestNewQuest", (arg) =>
     {
       var newQuestInfo = {};
+<<<<<<< HEAD
       let newQuest = [], oldQuest = findAchievedDes()
       allDestination.forEach(des => {
         if (!(des in oldQuest) || oldQuest.length >= newQuest.length) {
@@ -225,6 +283,12 @@ io.on('connection', (socket) =>{
       newQuestInfo['DLat'] = newQuest[randomDestination]['location']['latitude'];
       newQuestInfo['DLon'] = newQuest[randomDestination]['location']['longitude'];
       newQuestInfo['Name'] = newQuest[randomDestination]['name']
+=======
+      randomDestination = Math.floor(Math.random() * (allDestination.length - 1));
+      console.log('RandomDestination = ', randomDestination)
+      newQuestInfo['DLat'] = allDestination[randomDestination]['location']['latitude'];
+      newQuestInfo['DLon'] = allDestination[randomDestination]['location']['longitude'];
+>>>>>>> refs/remotes/origin/main
       socket.emit("newQuest", newQuestInfo);
     });
 
@@ -241,6 +305,7 @@ io.on('connection', (socket) =>{
     socket.emit("desiredUserData", dData);
   });
 
+<<<<<<< HEAD
   socket.on("requestRankedLeaderboard", (arg) =>
     {
       var tempData = db.collection("User info").find({}).sort({"points":-1}).limit(10);
@@ -278,3 +343,7 @@ io.on('connection', (socket) =>{
   });
 
 });
+=======
+});
+
+>>>>>>> refs/remotes/origin/main

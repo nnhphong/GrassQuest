@@ -6,6 +6,7 @@
     let on_game = true; // to determine if user is currently on the challenge or not
     socket.emit("userConnected", useridd);
     socket.emit("requestNewQuest", useridd);
+    console.log('requestNewQuest sent!');
 
     socket.emit("requestRankedLeaderboard", {});
 
@@ -39,6 +40,11 @@
         console.log("rankedLeaderboard");
         console.log("printed leaderboard");
     });
+    // socket.on("wantedPosition", (arg) =>
+    // {
+    //     dataToSend['desiredLat'] = arg['DLat'];
+    //     dataToSend['desiredLon'] = arg['DLon'];
+    // });
 
     socket.on("returnedData", (arg) =>
     {

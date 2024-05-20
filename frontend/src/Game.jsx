@@ -5,7 +5,11 @@ import Modal from "./Modal"
 function Game({setView, setPlaying, socket, targetLocation, hintsList, updateHintsList, getNewTarget}) {
     // var [direction, setDirection] = useState("Loading...");
     var [location, setLocation] = useState({"lat": 0, "lon": 0});
+<<<<<<< HEAD
     var [showModal, toggleModal] = useState(false);
+=======
+
+>>>>>>> refs/remotes/origin/main
     var dataToSend = {};
     dataToSend['desiredLat'] = targetLocation.lat;
     dataToSend['desiredLon'] = targetLocation.lon;
@@ -18,12 +22,20 @@ function Game({setView, setPlaying, socket, targetLocation, hintsList, updateHin
 
     function updatePositionsNow(position)
     {
+<<<<<<< HEAD
         dataToSend['LatiPosition'] = position.coords.latitude;
         dataToSend['LongPosition'] = position.coords.longitude;
     }
     
     // dataToSend['LatiPosition'] = location.lat;
     // dataToSend['LongPosition'] = location.lon;
+=======
+            setLocation({"lat": position.coords.latitude, "lon": position.coords.longitude});
+    }
+    
+    dataToSend['LatiPosition'] = location.lat;
+    dataToSend['LongPosition'] = location.lon;
+>>>>>>> refs/remotes/origin/main
 
     navigator.geolocation.watchPosition(updatePositionsNow);
 
@@ -36,9 +48,12 @@ function Game({setView, setPlaying, socket, targetLocation, hintsList, updateHin
           clearInterval(interval);
         };
     }, []); // has no dependency - this will be called on-component-mount
+<<<<<<< HEAD
     async function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
+=======
+>>>>>>> refs/remotes/origin/main
 
     var hintsToDisplay = hintsList;
     if (hintsList.length > 3){
