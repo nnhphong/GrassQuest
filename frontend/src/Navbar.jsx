@@ -22,6 +22,7 @@ function Navbar({ setView }) {
   }, []);
 
 
+  
   return (
     <>
       <header className="bg-slate-900 py-3 lg:py-4 sticky z-[999] top-0 px-2 h-20" id="home">
