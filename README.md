@@ -11,6 +11,7 @@ GrassQuest is an app that selects a nearby tourist spot or monument for users to
 
 ## How we built it
 **Frontend** - Our frontend is built with ReactJS, Tailwind, and HTML/CSS.
+
 **Backend** - Our project uses Node.js and Express.js as the foundation, along with additional libraries like socket.io for seamless client-server communication. The backend efficiently handles tasks such as generating new challenges, updating user points, and managing the leaderboard.
 
 **Database** - We use MongoDB to store user information and other necessary data for the app.
