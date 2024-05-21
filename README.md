@@ -1,7 +1,7 @@
-# HawkHack
-Was for HawkHacks 2024
-main branch is broken
-use the `new` branch
+# GrassQuest
+Our HawkHacks 2024 project. The updated version is in the `new` branch.
+
+Submission & Screenshots: [https://taikai.network/hackbox/hackathons/hawkhacks/projects/clwd22uzo0cuxz901zh9f0vb5/idea](https://taikai.network/hackbox/hackathons/hawkhacks/projects/clwd22uzo0cuxz901zh9f0vb5/idea)
 
 ## Inspiration
 We were very frustrated with the fact that the average university student, particularly CS students, do not get enough sunlight or outdoor activity. This means many students are missing out on exploring the campus, city, and its vibrant attractions. GrassQuest encourages students to venture beyond their usual campus spots by verifying user-submitted photos with the actual locations to ensure they visit these areas. Users can compete in monthly and yearly leaderboards, fostering friendly competition among friends as they share their scores and challenge each other.
